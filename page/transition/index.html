@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>过渡动画</title>
+
+    <script src="../../libs/vue-2.6.11/vue.js"></script>
+    <script src="../../libs/fox-v2.0.0/index.js"></script>
+
+    <style>
+        .my-a-list a{
+            cursor: pointer;
+            color:blueviolet;
+            margin-left: 20px;
+        }
+
+        .my-item-div{
+            position: relative;
+        }
+
+        .my-item{
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            display: -webkit-flex; /* Safari */
+            display: flex;
+            flex-flow: row nowrap;
+            align-items:center;
+            justify-content: center;
+        }
+
+
+        .fox-enter{
+            transform: translateX(100px);
+            opacity: 1;
+        }
+
+        /* 可以设置不同的进入和离开动画 */
+        /* 设置持续时间和动画函数 */
+        .fox-enter-active {
+            transition: all 3s ease;
+        }
+
+        .fox-enter-to{
+            color:red;
+            opacity: 1;
+        }
+
+        .fox-leave{
+
+        }
+
+        /* 可以设置不同的进入和离开动画 */
+        /* 设置持续时间和动画函数 */
+        .fox-leave-active {
+            transition: all 3s ease;
+        }
+
+        .fox-leave-to{
+            color:red;
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>过渡动画</h1>
+    <p class="my-a-list">
+        <!-- a标签组件来导航. -->
+        <!--情况1 {paht:'/snake'}-->
+        <a @click=to('/snake')>Go to Snake</a>
+        <!-- {name:'dog'}-->
+        <a @click="to('dog')">Go to Dog</a>
+        <!--route-->
+        <a @click="to(location)">Go to Cat</a>
+    </p>
+    <!-- 路由出口 -->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <fox-router-view class="my-item-div"
+                     enter-class = "fox-enter"
+                     enter-active-class = "fox-enter-active"
+                     enter-to-class = "fox-enter-to"
+                     leave-class = "fox-leave"
+                     leave-active-class = "fox-leave-active"
+                     leave-to-class = "fox-leave-to">
+    </fox-router-view>
+</div>
+<script>
+
+
+    // 1. 定义 (路由) 组件。
+    // 可以从其他文件 import 进来
+    const Snake = { template: '<div class="my-item"><span>this is snake</span></div>' }
+    const Dog = { template: '<div class="my-item"><span>this is dog</span></div>' }
+    const Cat = { template: '<div class="my-item"><span>this is cat</span></div>' }
+
+    // 2. 定义路由
+    const routes = [
+        {
+            path: '/snake',
+            name: 'snake',
+            component: Snake
+        },
+        {
+            path: '/dog',
+            name: 'dog',
+            component: Dog
+        },
+        {
+            path: '/cat',
+            name: 'cat',
+            component: Cat
+        },
+    ]
+
+
+    //3.加入路由
+    fox.router.addRoutes(routes);
+
+
+    // 4. 创建和挂载根实例。
+    new Vue({
+        fox,
+        //数据
+        data(){
+            return{
+                location:{
+                    path:'/cat',
+                    root:'default'
+                }
+            }
+        },
+        //方法
+        methods:{
+            //路由跳转
+            to(path){
+                //路由
+                let route = path
+                if(typeof path == 'string'){
+                    if(path.charAt(0) === '/'){
+                        route = {
+                            'path':path,
+                        }
+                    }else{
+                        route = {
+                            'name':path,
+                        }
+                    }
+                }
+                this.$router.to(route)
+            }
+        }
+
+    }).$mount('#app')
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>命名空间-整体更新</title>
+
+    <script src="../../libs/vue-2.6.11/vue.js"></script>
+    <script src="../../libs/fox-v2.0.0/index.js"></script>
+
+    <style>
+        .one{
+            width: 300px;
+            height: 100px;
+            background: red;
+        }
+        .two{
+            width: 300px;
+            height: 100px;
+            background: green;
+        }
+        .three{
+            width: 300px;
+            height: 100px;
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--view的name的属性的默认值为'default'-->
+    <fox-router-view class="one"></fox-router-view>
+    <!--设置view的name为two-->
+    <fox-router-view class="two" name="two"></fox-router-view>
+    <!--设置view的name为three-->
+    <fox-router-view class="three" name="three"></fox-router-view>
+</div>
+<script>
+    // 1. 定义 (路由) 组件。
+    // 可以从其他文件 import 进来
+    const Snake = { template: '<div>this is snake</div>' }
+    const Dog = { template: '<div>this is dog</div>' }
+    const Cat = { template: '<div>this is cat</div>' }
+
+    // 2. 定义路由
+    const routes = [
+        {
+            path: '/',
+            components:{
+                default:Snake,
+                'two':Dog,
+                'three':Cat,
+            }
+        }
+    ]
+
+    //3.加入路由
+    fox.router.addRoutes(routes);
+
+    // 4. 创建和挂载根实例。
+    new Vue({
+        fox,
+    }).$mount('#app')
+</script>
+</body>
+</html>

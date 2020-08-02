@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Fox Router</title>
+
+    <script src="../../libs/vue-2.6.11/vue.js"></script>
+    <script src="../../libs/fox-v2.0.0/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1>声明式编程</h1>
+    <p>
+        <!-- 使用 fox-router-link 组件来导航. -->
+        <!-- 通过传入 `to` 属性指定链接. -->
+        <!-- <fox-router-link> 默认会被渲染成一个 `<a>` 标签 -->
+        <!--情况1 {paht:'/snake'}-->
+        <fox-router-link to="/snake">Go to Snake</fox-router-link>
+        <!-- {name:'dog'}-->
+        <fox-router-link to="dog">Go to Dog</fox-router-link>
+        <!--route-->
+        <fox-router-link :to="location">Go to Cat</fox-router-link>
+    </p>
+    <!-- 路由出口 -->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <fox-router-view>
+    </fox-router-view>
+</div>
+<script>
+
+
+    // 1. 定义 (路由) 组件。
+    // 可以从其他文件 import 进来
+    const Snake = { template: '<div>this is snake</div>' }
+    const Dog = { template: '<div>this is dog</div>' }
+    const Cat = { template: '<div>this is cat</div>' }
+
+    // 2. 定义路由
+    const routes = [
+        {
+            path: '/snake',
+            name: 'snake',
+            component: Snake
+        },
+        {
+            path: '/dog',
+            name: 'dog',
+            component: Dog
+        },
+        {
+            path: '/cat',
+            name: 'cat',
+            component: Cat
+        },
+    ]
+
+
+    //3.加入路由
+    fox.router.addRoutes(routes);
+
+
+    // 4. 创建和挂载根实例。
+    new Vue({
+        fox,
+        data(){
+            return{
+                location:{
+                    path:'/cat',
+                    root:'default'
+                }
+            }
+        }
+
+    }).$mount('#app')
+</script>
+</body>
+</html>

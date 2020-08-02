@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路由匹配</title>
+
+    <script src="../../libs/vue-2.6.11/vue.js"></script>
+    <script src="../../libs/fox-v2.0.0/index.js"></script>
+
+    <style>
+        .my-a-list a{
+            cursor: pointer;
+            color:blueviolet;
+            width: 200px;
+            height: 50px;
+            margin-left: 20px;
+        }
+
+        .my-view{
+            width: 500px;
+            height: 200px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>路由匹配</h1>
+    <p class="my-a-list">
+        <!-- a标签组件来导航. -->
+        <!--{paht:'/snake'}-->
+        <a @click=to('/snake/蛇')>蛇</a>
+        <!--{paht:'/snake/黄金蟒'}-->
+        <a @click=to('/snake/黄金蟒')>黄金蟒</a>
+        <!--{paht:'/snake/黑曼巴'}-->
+        <a @click=to('/snake/黑曼巴')>黑曼巴</a>
+        <!--{paht:'/cobra'}-->
+        <a @click=to('/cobra')>重定向</a>
+        <!--{paht:'/cobra'}-->
+        <a @click=to('/jc')>NotFound</a>
+    </p>
+    <!-- 路由出口 -->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <fox-router-view class="my-view">
+    </fox-router-view>
+</div>
+<script>
+
+
+    // 1. 定义 (路由) 组件。
+    // 可以从其他文件 import 进来
+    const Snake = { template: '<div>this is snake {{ $route.params.name }}</div>' }
+    const NotFound = { template: '<div>404</div>' }
+
+    // 2. 定义路由
+    const routes = [
+        {
+            path: '/snake/:name',
+            name: 'snake',
+            component: Snake
+        },
+        {
+            path: '/',
+            redirect: '/snake/转发'
+        },
+        {
+            path: '/cobra',
+            name: 'cobra',
+            redirect: '/snake/默认'
+        }
+    ]
+
+
+    //3.加入路由
+    fox.router.addRoutes(routes);
+
+    //4.设置NotFound Route
+    let notFoundRoute =  {
+        path: '/not_found',
+        name: 'not_found',
+        component: NotFound,
+    }
+    fox.router.setNotFoundRoute(notFoundRoute)
+
+
+    // 4. 创建和挂载根实例。
+    new Vue({
+        fox,
+        //方法
+        methods:{
+            //路由跳转
+            to(path){
+                //路由
+                let route = path
+                if(typeof path == 'string'){
+                    if(path.charAt(0) === '/'){
+                        route = {
+                            'path':path,
+                        }
+                    }else{
+                        route = {
+                            'name':path,
+                        }
+                    }
+                }
+                this.$router.to(route)
+            }
+        }
+
+    }).$mount('#app')
+</script>
+</body>
+</html>

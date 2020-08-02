@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>命名视图-局部更新</title>
+
+    <script src="../../libs/vue-2.6.11/vue.js"></script>
+    <script src="../../libs/fox-v2.0.0/index.js"></script>
+
+    <style>
+        .one{
+            width: 300px;
+            height: 100px;
+            background: red;
+        }
+        .two{
+            width: 300px;
+            height: 100px;
+            background: green;
+        }
+        .three{
+            width: 300px;
+            height: 100px;
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--view的name的属性的默认值为'default'-->
+    <fox-router-view></fox-router-view>
+</div>
+<script>
+    // 1. 定义 (路由) 组件。
+    // 可以从其他文件 import 进来
+    const Snake = {
+        template: `
+        <div>
+          <div class="one">this is snake</div>
+          <fox-router-view class="two" name="two"></fox-router-view>
+          <fox-router-view class="three" name="three"></fox-router-view>
+        </div>
+        `,
+
+        //加载后处理
+        mounted(){
+            this.$router.to('/dog',{},'two')
+            this.$router.to({
+                path:'/cat',
+                root:'three'
+            })
+        }
+    }
+
+
+    const Dog = { template: '<div>this is dog</div>' }
+    const Cat = { template: '<div>this is cat</div>' }
+
+    // 2. 定义路由
+    const routes = [
+        {
+            path: '/',
+            component:Snake,
+        },
+        {
+            path:"/dog",
+            component:Dog,
+        },
+        {
+            path:"/cat",
+            component:Cat,
+        }
+    ]
+
+    //3.加入路由
+    fox.router.addRoutes(routes);
+
+    // 4. 创建和挂载根实例。
+    new Vue({
+        fox,
+    }).$mount('#app')
+</script>
+</body>
+</html>

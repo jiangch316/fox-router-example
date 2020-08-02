@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路由参数传递-代码传递</title>
+
+    <script src="../../libs/vue-2.6.11/vue.js"></script>
+    <script src="../../libs/fox-v2.0.0/index.js"></script>
+
+    <style>
+        .one{
+            width: 300px;
+            height: 100px;
+            background: gray;
+            color:#fff;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--view的name的属性的默认值为'_sys_root'-->
+    <fox-router-view class="one" name="_sys_root"></fox-router-view>
+</div>
+<script>
+
+    //组件
+    const User = { template: '<div>User {{ $route.params.id }}</div>' }
+    // 2. 定义路由
+    const routes = [
+        {
+            path: '/user',
+            component:User,
+        }
+    ]
+
+    //3.关闭hash monitor
+    fox.router.options.hashMonitor = false
+
+    //3.加入路由
+    fox.router.addRoutes(routes);
+
+    // 4. 创建和挂载根实例。
+    new Vue({
+        fox,
+        //页面加载后处理
+        mounted(){
+            this.$router.push({
+                path:'/user',
+                root:'_sys_root',
+                params:{
+                    'id':'江成'
+                }
+            })
+        }
+    }).$mount('#app')
+</script>
+</body>
+</html>
